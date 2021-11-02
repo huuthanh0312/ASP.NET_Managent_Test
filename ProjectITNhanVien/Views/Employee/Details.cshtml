@@ -1,0 +1,72 @@
+﻿@model ProjectITNhanVien.Models.Employee
+@Model IEnumerable<EmployeeSkill>
+
+    @{
+        ViewBag.Title = "Details";
+    }
+
+    <h2>Details</h2>
+
+    <div>
+        <h4>Employee</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.BranchID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BranchID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BirthDate, "{dd/MM/yyyy}")
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Joining_Date)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Joining_Date, "{dd/MM/yyyy}")
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Notes)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Notes)
+            </dd>
+            <dd>
+                @foreach (var item in ViewBag.EmployeeSkill)
+                {
+                    <span class="badge bg-success"> @item.SkillName </span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EmployeeID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>

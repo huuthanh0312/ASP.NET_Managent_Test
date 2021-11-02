@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ProjectITNhanVien.Models.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Joining_Date)
+        </th>
+        <th> Kĩ Năng</th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notes)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.BranchID)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.BirthDate, "{dd/MM/yyyy}")
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Address)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Joining_Date, "{dd/MM/yyyy}")
+    </td>
+    <td>
+        @foreach (var itemskill in ViewBag.EmployeeSkill)
+        {
+            if (item.EmployeeID == itemskill.EmployeeID)
+            {
+                <span class="badge bg-success"> @itemskill.SkillName </span>
+            }
+
+        }
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Notes)
+    </td>
+
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.EmployeeID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeID })
+    </td>
+</tr>
+}
+
+</table>
