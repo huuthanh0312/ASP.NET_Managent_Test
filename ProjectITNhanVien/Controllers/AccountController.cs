@@ -58,7 +58,28 @@ namespace ProjectITNhanVien.Controllers
 
             }
             return View();
+            //var check = db.Users.FirstOrDefault(o => o.Username == Username);
+            //if (Password != null)
+            //{
+            //    if (check == null)
+            //    {
+            //        Password = GetMD5(Password);
+            //        db.Users.Add(systemDatabase);
+            //        db.SaveChanges();
+            //        ViewBag.confirn = "Đăng ký thành công!!";
+            //    }
+            //    else
+            //    {
+            //        ViewBag.error = "Tên đăng nhập đã tồn tại!";
+            //    }
 
+            //}
+            //else
+            //{
+            //    ViewBag.error = "Đăng ký thất bại!";
+            //    return View();
+            //}
+            //return View();
         }
     }
 }

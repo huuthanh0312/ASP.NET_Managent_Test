@@ -64,7 +64,8 @@ namespace ProjectITNhanVien.Controllers
         {
             try
             {
-
+                ViewBag.SelectListBranch = db.Branches.ToList();
+                ViewBag.Skills = db.Skills.ToList();
                 // TODO: Add insert logic here
                 if (SkillID != null)
                 {
@@ -110,50 +111,110 @@ namespace ProjectITNhanVien.Controllers
 
         // POST: Employee/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, Employee employee, long[] SkillID)
+        public ActionResult Edit(int id, Employee model, long[] SkillID)
         {
             try
             {
-                // TODO: Add update logic here
+                List<Branch> branchList = db.Branches.ToList();
+                ViewBag.SelectListBranch = branchList;
+
+                var result = (from e in db.Employees
+                              from s in e.Skills
+                              join c in db.Skills on s.SkillID equals c.SkillID
+                              where e.EmployeeID == id
+                              select new EmployeeSkill
+                              {
+                                  SkillID = c.SkillID,
+                                  SkillName = c.SkillName
+                              }).ToList();
+
+                ViewBag.EmployeeSkill = result;
+                ViewBag.Skills = db.Skills.ToList();
+                //// TODO: Add update logic here
+                //if (ModelState.IsValid)
+                //{
+                //    var result = (from e in db.Employees
+                //                  from s in e.Skills
+                //                  join c in db.Skills on s.SkillID equals c.SkillID
+                //                  where e.EmployeeID == id
+                //                  select new EmployeeSkill
+                //                  {
+                //                      SkillID = c.SkillID,
+                //                      SkillName = c.SkillName
+                //                  }).ToList();
+                //    Employee employee1 = db.Employees.Find(id);
+                //    foreach (var oldSkill in result)
+                //    {
+                //        var skill = db.Skills.FirstOrDefault(s => s.SkillID == oldSkill.SkillID);
+                //        employee1.Skills.Remove(skill);
+
+                //    }
+                //    foreach (var skillid in SkillID)
+                //    {
+                //        Skill skill = db.Skills.Where(d => d.SkillID == skillid).First();
+
+                //        employee1.Skills.Add(skill);
+
+
+                //    }
+                //    db.Entry(employee).State = EntityState.Modified;
+                //    db.SaveChanges();
+                //    return RedirectToAction("Index");
+
+                //}
+                //else
+                //{
+                //    return Content("0");
+                //}
+                var employee = db.Employees.Find(id);
+                if (employee == null)
+                {
+                    return new HttpNotFoundResult();
+                }
+
                 if (ModelState.IsValid)
                 {
-                    var result = (from e in db.Employees
-                                  from s in e.Skills
-                                  join c in db.Skills on s.SkillID equals c.SkillID
-                                  where e.EmployeeID == id
-                                  select new EmployeeSkill
-                                  {
-                                      SkillID = c.SkillID,
-                                      SkillName = c.SkillName
-                                  }).ToList();
-                    Employee employee1 = db.Employees.Find(id);
-                    foreach (var oldSkill in result)
-                    {
-                        var skill = db.Skills.FirstOrDefault(s => s.SkillID == oldSkill.SkillID);
-                        employee1.Skills.Remove(skill);
-                        
-                    }
-                    foreach (var skillid in SkillID)
-                    {
-                        Skill skill = db.Skills.Where(d => d.SkillID == skillid).First();
+                    employee.BranchID = model.BranchID;
+                    employee.Name = model.Name;
+                    employee.BirthDate = model.BirthDate;
+                    employee.Address = model.Address;
+                    employee.Joining_Date = model.Joining_Date;
+                    employee.Notes = model.Notes;
 
-                        employee1.Skills.Add(skill);
-                        
+                    // Remove deselected skills
+                    employee.Skills.Where(m => !SkillID.Contains(m.SkillID))
+                        .ToList().ForEach(skill => employee.Skills.Remove(skill));
+                    //lay ra danh sach khac sau do xoas dii
+                    //employee.Skills.Where(m => )
+                    //    .ToList().ForEach(skill => employee.Skills.Remove(skill));
+                    //// Add new skills
+                    //var existingSkillIds = employee.Skills.Select(m => m.SkillID);
+                    //db.Skills.Where(m => (String)SkillID.Exclude(existingSkillIds).Contains(m.SkillID))
+                    //.ToList().ForEach(skill => employee.Skills.Add(skill));
 
+                    var exitskillid = employee.Skills.ToList();
+                    foreach(var item in exitskillid)
+                    {
+                        foreach (var itemii in SkillID)
+                        {
+                            if(item.SkillID != itemii)
+                            {
+                                Skill skill = db.Skills.Where(d => d.SkillID == itemii).First();
+
+                                employee.Skills.Add(skill);
+                            }
+                        }
                     }
-                    db.Entry(employee).State = EntityState.Modified;
+                
                     db.SaveChanges();
                     return RedirectToAction("Index");
+                }
 
-                }
-                else
-                {
-                    return Content("0");
-                }
+                return View(model);
             }
             catch
             {
-                return View(employee);
+                return View(model);
             }
         }
 
